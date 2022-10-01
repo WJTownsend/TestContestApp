@@ -93,6 +93,15 @@ for answer in temp_answers:
     # entry_variables = [entrant_name, entrant_email, q1a1, q1a2, q1a3, q1a4, q1a5, q2a1, q2a2, q2a3, q2a4, q2a5]
     #submitted = st.form_submit_button("Submit your entry!")
     #if submitted:
+
+# Use Shillelagh to insert the info to the spreadsheet
+connection = connect(":memory:")
+cursor = connection.cursor()
+sheet_url = st.secrets["private_gsheets_url"]
+query = f"INSERT INTO {sheet_url} table_url VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+cursor.execute(query, (entrant_name, entrant_email, q1a1, q1a2, q1a3, q1a4, q1a5, q2a1, q2a2, q2a3, q2a4, q2a5))
+
+
 st.write(f"{entrant_name}, your entry associated with {entrant_email} has been submitted with the following selections:  \nQuestion 1:{q1a1}, {q1a2}, {q1a3}, {q1a4}, {q1a5}  \nQuestion 2:{q2a1}, {q2a2}, {q2a3}, {q2a4}, {q2a5}")
 
 
