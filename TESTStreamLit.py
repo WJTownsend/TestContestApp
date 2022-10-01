@@ -1,8 +1,7 @@
-import altair as alt
 import numpy as np
 import pandas as pd
-import pydeck as pdk
 from sqlalchemy import null
+from shillelagh.backends.apsw.db import connect
 import streamlit as st
 st.set_page_config(layout="wide")
 
@@ -103,5 +102,5 @@ st.write(f"{entrant_name}, your entry associated with {entrant_email} has been s
 
 
 
-entry_variables = [entrant_name, entrant_email, q1a1, q1a2, q1a3, q1a4, q1a5, q2a1, q2a2, q2a3, q2a4, q2a5]
+# entry_variables = [entrant_name, entrant_email, q1a1, q1a2, q1a3, q1a4, q1a5, q2a1, q2a2, q2a3, q2a4, q2a5]
 # entry_data = pd.Series(entry_variables)
