@@ -101,8 +101,10 @@ with st.form("contest_entry_form"):
         connection = connect(":memory:")
         cursor = connection.cursor()
         sheet_url = st.secrets["private_gsheets_url"]
-        query = f'INSERT INTO "{sheet_url}" VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'
-        cursor.execute(query, (entrant_name, entrant_email, q1a1, q1a2, q1a3, q1a4, q1a5, q2a1, q2a2, q2a3, q2a4, q2a5))
+        # query = f'INSERT INTO "{sheet_url}" VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'
+        # cursor.execute(query, (entrant_name, entrant_email, q1a1, q1a2, q1a3, q1a4, q1a5, q2a1, q2a2, q2a3, q2a4, q2a5))
+        query = f'INSERT INTO "{sheet_url}" VALUES ("{entrant_name}", "{entrant_email}", "{q1a1}", "{q1a2}", "{q1a3}", "{q1a4}", "{q1a5}", "{q2a1}", "{q2a2}", "{q2a3}", "{q2a4}", "{q2a5}")'
+        cursor.execute(query)
         
         st.write(f"{entrant_name}, your entry associated with {entrant_email} has been submitted with the following selections:  \nQuestion 1:{q1a1}, {q1a2}, {q1a3}, {q1a4}, {q1a5}  \nQuestion 2:{q2a1}, {q2a2}, {q2a3}, {q2a4}, {q2a5}")
 
