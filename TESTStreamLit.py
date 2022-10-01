@@ -96,9 +96,9 @@ with st.form("contest_entry_form"):
     if submitted:
 
         # Use Shillelagh to insert the info to the spreadsheet
-        # credentials = service_account.Credentials.from_service_account_info(st.secrets["gcp_service_account"], scopes=["https://www.googleapis.com/auth/spreadsheets",],)
-        # connection = connect(credentials = credentials)
-        connection = connect(":memory:")
+        credentials = service_account.Credentials.from_service_account_info(st.secrets["gcp_service_account"], scopes=["https://www.googleapis.com/auth/spreadsheets",],)
+        connection = connect(credentials = credentials)
+        # connection = connect(":memory:")
         cursor = connection.cursor()
         sheet_url = st.secrets["private_gsheets_url"]
         # query = f'INSERT INTO "{sheet_url}" VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'
