@@ -1,6 +1,7 @@
 import numpy as np
 import pandas as pd
 from sqlalchemy import null
+from google.oauth2 import service_account
 from shillelagh.backends.apsw.db import connect
 import streamlit as st
 st.set_page_config(layout="wide")
@@ -38,71 +39,75 @@ few "sure things" to get some points on the board.
 Good luck with this year's contest! You're gonna need it!
 """
 
-#with st.form("contest_entry_form"):
+with st.form("contest_entry_form"):
 
-"### Entrant name & email address:"
-entrant_name = st.text_input("Your name")
-if len(entrant_name) < 1:
-    st.error("Please provide a valid name.")
-entrant_email = st.text_input("Your email address")
-if entrant_email.find("@") == -1:
-    st.error("Please provide a valid email address.")
-if entrant_email.find(".") == -1:
-    st.error("Please provide a valid email address.")
+    "### Entrant name & email address:"
+    entrant_name = st.text_input("Your name")
+    if len(entrant_name) < 1:
+        st.error("Please provide a valid name.")
+    entrant_email = st.text_input("Your email address")
+    if entrant_email.find("@") == -1:
+        st.error("Please provide a valid email address.")
+    if entrant_email.find(".") == -1:
+        st.error("Please provide a valid email address.")
 
-"### Q1: Provide up to five teams which will **definitely** make the playoffs in the 2022-23 season:"
-accepted_teams = ["Anaheim Ducks", "Arizona Coyotes", "Boston Bruins", "Buffalo Sabres", "Calgary Flames", "Carolina Hurricanes", "Chicago Blackhawks", "Colorado Avalanche", "Columbus Blue Jackets", "Dallas Stars", "Detroit Red Wings", "Edmonton Oilers", "Florida Panthers", "Los Angeles Kings", "Minnesota Wild", "Montreal Canadiens", "Nashville Predators", "New Jersey Devils", "New York Islanders", "New York Rangers", "Ottawa Senators", "Philadelphia Flyers", "Pittsburght Penguins", "San Jose Sharks", "Seattle Kraken", "St. Louis Blues", "Tampa Bay Lightning", "Toronto Maple Leafs", "Vancouver Canucks", "Vegas Golden Knights", "Washington Capitals", "Winnipeg Jets"]
-col1, col2, col3, col4, col5 = st.columns(5)
-q1a1 = col1.selectbox("Question 1, Answer 1", ["PASS"] + accepted_teams)
-q1a2 = col2.selectbox("Question 1, Answer 2", ["PASS"] + accepted_teams)
-q1a3 = col3.selectbox("Question 1, Answer 3", ["PASS"] + accepted_teams)
-q1a4 = col4.selectbox("Question 1, Answer 4", ["PASS"] + accepted_teams)
-q1a5 = col5.selectbox("Question 1, Answer 5", ["PASS"] + accepted_teams)
-temp_answers = [q1a1, q1a2, q1a3, q1a4, q1a5]
-for answer in temp_answers:
-    if answer == "PASS":
-        continue
-    else:
-        if temp_answers.count(answer) != 1:
-            answer_index = temp_answers.index(answer)
-            temp_answers.pop(answer_index)
-            temp_answers.insert(answer_index, "PASS")
-            st.write("Removed duplicate answer!")
-q1a1, q1a2, q1a3, q1a4, q1a5 = temp_answers
+    "### Q1: Provide up to five teams which will **definitely** make the playoffs in the 2022-23 season:"
+    accepted_teams = ["Anaheim Ducks", "Arizona Coyotes", "Boston Bruins", "Buffalo Sabres", "Calgary Flames", "Carolina Hurricanes", "Chicago Blackhawks", "Colorado Avalanche", "Columbus Blue Jackets", "Dallas Stars", "Detroit Red Wings", "Edmonton Oilers", "Florida Panthers", "Los Angeles Kings", "Minnesota Wild", "Montreal Canadiens", "Nashville Predators", "New Jersey Devils", "New York Islanders", "New York Rangers", "Ottawa Senators", "Philadelphia Flyers", "Pittsburght Penguins", "San Jose Sharks", "Seattle Kraken", "St. Louis Blues", "Tampa Bay Lightning", "Toronto Maple Leafs", "Vancouver Canucks", "Vegas Golden Knights", "Washington Capitals", "Winnipeg Jets"]
+    col1, col2, col3, col4, col5 = st.columns(5)
+    q1a1 = col1.selectbox("Question 1, Answer 1", ["PASS"] + accepted_teams)
+    q1a2 = col2.selectbox("Question 1, Answer 2", ["PASS"] + accepted_teams)
+    q1a3 = col3.selectbox("Question 1, Answer 3", ["PASS"] + accepted_teams)
+    q1a4 = col4.selectbox("Question 1, Answer 4", ["PASS"] + accepted_teams)
+    q1a5 = col5.selectbox("Question 1, Answer 5", ["PASS"] + accepted_teams)
+    temp_answers = [q1a1, q1a2, q1a3, q1a4, q1a5]
+    for answer in temp_answers:
+        if answer == "PASS":
+            continue
+        else:
+            if temp_answers.count(answer) != 1:
+                answer_index = temp_answers.index(answer)
+                temp_answers.pop(answer_index)
+                temp_answers.insert(answer_index, "PASS")
+                st.write("Removed duplicate answer!")
+    q1a1, q1a2, q1a3, q1a4, q1a5 = temp_answers
 
-"### Q2: Provide up to five teams which will **definitely** not make the playoffs in the 2022-23 season:"
-col1, col2, col3, col4, col5 = st.columns(5)
-q2a1 = col1.selectbox("Question 2, Answer 1", ["PASS"] + accepted_teams)
-q2a2 = col2.selectbox("Question 2, Answer 2", ["PASS"] + accepted_teams)
-q2a3 = col3.selectbox("Question 2, Answer 3", ["PASS"] + accepted_teams)
-q2a4 = col4.selectbox("Question 2, Answer 4", ["PASS"] + accepted_teams)
-q2a5 = col5.selectbox("Question 2, Answer 5", ["PASS"] + accepted_teams)
-temp_answers = [q2a1, q2a2, q2a3, q2a4, q2a5]
-for answer in temp_answers:
-    if answer == "PASS":
-        continue
-    else:
-        if temp_answers.count(answer) != 1:
-            answer_index = temp_answers.index(answer)
-            temp_answers.pop(answer_index)
-            temp_answers.insert(answer_index, "PASS")
-            st.write("Removed duplicate answer!")
-    q2a1, q2a2, q2a3, q2a4, q2a5 = temp_answers
+    "### Q2: Provide up to five teams which will **definitely** not make the playoffs in the 2022-23 season:"
+    col1, col2, col3, col4, col5 = st.columns(5)
+    q2a1 = col1.selectbox("Question 2, Answer 1", ["PASS"] + accepted_teams)
+    q2a2 = col2.selectbox("Question 2, Answer 2", ["PASS"] + accepted_teams)
+    q2a3 = col3.selectbox("Question 2, Answer 3", ["PASS"] + accepted_teams)
+    q2a4 = col4.selectbox("Question 2, Answer 4", ["PASS"] + accepted_teams)
+    q2a5 = col5.selectbox("Question 2, Answer 5", ["PASS"] + accepted_teams)
+    temp_answers = [q2a1, q2a2, q2a3, q2a4, q2a5]
+    for answer in temp_answers:
+        if answer == "PASS":
+            continue
+        else:
+            if temp_answers.count(answer) != 1:
+                answer_index = temp_answers.index(answer)
+                temp_answers.pop(answer_index)
+                temp_answers.insert(answer_index, "PASS")
+                st.write("Removed duplicate answer!")
+        q2a1, q2a2, q2a3, q2a4, q2a5 = temp_answers
 
     # Other questions go here once we have this working
     # entry_variables = [entrant_name, entrant_email, q1a1, q1a2, q1a3, q1a4, q1a5, q2a1, q2a2, q2a3, q2a4, q2a5]
-    #submitted = st.form_submit_button("Submit your entry!")
-    #if submitted:
+    submitted = st.form_submit_button("Submit your entry!")
+    if submitted:
 
-# Use Shillelagh to insert the info to the spreadsheet
-connection = connect(":memory:")
-cursor = connection.cursor()
-sheet_url = st.secrets["private_gsheets_url"]
-query = f"INSERT INTO {sheet_url} table_url VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
-cursor.execute(query, (entrant_name, entrant_email, q1a1, q1a2, q1a3, q1a4, q1a5, q2a1, q2a2, q2a3, q2a4, q2a5))
+        # Use Shillelagh to insert the info to the spreadsheet
+        # credentials = service_account.Credentials.from_service_account_info(st.secrets["gcp_service_account"], scopes=["https://www.googleapis.com/auth/spreadsheets",],)
+        # connection = connect(credentials = credentials)
+        connection = connect(":memory:")
+        cursor = connection.cursor()
+        sheet_url = st.secrets["private_gsheets_url"]
+        query = f'INSERT INTO "{sheet_url}" table_url VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'
+        cursor.execute(query, (entrant_name, entrant_email, q1a1, q1a2, q1a3, q1a4, q1a5, q2a1, q2a2, q2a3, q2a4, q2a5))
+        
+        st.write(f"{entrant_name}, your entry associated with {entrant_email} has been submitted with the following selections:  \nQuestion 1:{q1a1}, {q1a2}, {q1a3}, {q1a4}, {q1a5}  \nQuestion 2:{q2a1}, {q2a2}, {q2a3}, {q2a4}, {q2a5}")
 
 
-st.write(f"{entrant_name}, your entry associated with {entrant_email} has been submitted with the following selections:  \nQuestion 1:{q1a1}, {q1a2}, {q1a3}, {q1a4}, {q1a5}  \nQuestion 2:{q2a1}, {q2a2}, {q2a3}, {q2a4}, {q2a5}")
+
 
 
 
