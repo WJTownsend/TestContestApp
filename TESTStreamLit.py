@@ -98,8 +98,22 @@ with st.form("contest_entry_form"):
         # Use Shillelagh to insert the info to the spreadsheet
         credentials = service_account.Credentials.from_service_account_info(st.secrets["gcp_service_account"], scopes=["https://www.googleapis.com/auth/spreadsheets",],)
         connection = connect(":memory:", adapter_kwargs={
-            "gsheetsapi" : {"service_account_file" : ".streamlit/secrets.toml"}
+            "gsheetsapi" : {
+                "type" : st.secrets["type"],
+                "project_id" : st.secrets["project_id"],
+                "private_key_id" : st.secrets["private_key_id"],
+                "private_key" : st.secrets["private_key"],
+                "client_email" : st.secrets["client_email"],
+                "client_id" : st.secrets["client_id"],
+                "auth_uri" : st.secrets["auth_uri"],
+                "token_uri" : st.secrets["token_uri"],
+                "auth_provider_x509_cert_url" : st.secrets["auth_provider_x509_cert_url"],
+                "client_x509_cert_url" : st.secrets["client_x509_cert_url"]
+            },
         })
+
+        
+
         # connection = connect(":memory:")
         cursor = connection.cursor()
         sheet_url = st.secrets["private_gsheets_url"]
