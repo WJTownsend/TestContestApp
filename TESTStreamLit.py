@@ -1,6 +1,5 @@
 import numpy as np
 import pandas as pd
-from sqlalchemy import null
 from shillelagh.backends.apsw.db import connect
 import streamlit as st
 st.set_page_config(layout="wide")
