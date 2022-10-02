@@ -102,7 +102,7 @@ with st.form("contest_entry_form"):
         connection = connect(":memory:", adapter_kwargs={
             "gsheetaspi" : { 
             "service_account_info" : {
-                type : st.secrets["type"],
+                "type" : st.secrets[type],
                 "project_id" : st.secrets["project_id"],
                 "private_key_id" : st.secrets["private_key_id"],
                 "private_key" : st.secrets["private_key"],
