@@ -100,7 +100,7 @@ with st.form("contest_entry_form"):
             st.secrets["gcp_service_account"], 
             scopes=["https://www.googleapis.com/auth/spreadsheets",],)
         connection = connect(":memory:", adapter_kwargs={
-            "gsheetaspi" : { 
+            "gsheetsapi" : { 
             "service_account_info" : {
                 "type" : st.secrets["gcp_service_account"]["type"],
                 "project_id" : st.secrets["gcp_service_account"]["project_id"],
