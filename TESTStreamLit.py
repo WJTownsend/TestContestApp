@@ -256,10 +256,9 @@ def new_contest_entry():
         submitted = st.form_submit_button("Submit your entry!")
         if submitted:
             # Create timestamp of submission
-            submission_time = datetime.datetime.now()
+            submission_time = datetime.datetime.now(tz='MDT')
             # Use Shillelagh to insert the info to the spreadsheet
             cursor = connection.cursor()
-
 
             # Troubleshooting for "Couldn't extract column labels from sheet"
             test_query = f'SELECT * FROM "{sheet_url}"'
