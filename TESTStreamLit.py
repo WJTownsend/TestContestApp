@@ -313,8 +313,8 @@ connection = connect(":memory:", adapter_kwargs={
             "token_uri" : st.secrets["gcp_service_account"]["token_uri"],
             "auth_provider_x509_cert_url" : st.secrets["gcp_service_account"]["auth_provider_x509_cert_url"],
             "client_x509_cert_url" : st.secrets["gcp_service_account"]["client_x509_cert_url"],
+            "tableRange": "!A1:BA1000"
             }
-        "tableRange": "!A1:BA1000"
     },
 })
 sheet_url = st.secrets["private_gsheets_url"]
