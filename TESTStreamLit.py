@@ -316,7 +316,8 @@ def retrieve_last_entry():
             })
             cursor = connection.cursor()
             sheet_url = st.secrets["private_gsheets_url"]
-            query = f'SELECT * FROM "{sheet_url}" WHERE B = {entrant_discord}'
+            query = f'SELECT * FROM "{sheet_url}"'
+            # query = f'SELECT * FROM "{sheet_url}" WHERE B = {entrant_discord}'
             st.write(f"These are the entries that have been submitted for the contest using the handle {entrant_discord}:")
             for row in cursor.execute(query):
                 print(row)
