@@ -319,6 +319,7 @@ def retrieve_last_entry():
             query = f'SELECT * FROM "{sheet_url}"'
             # query = f'SELECT * FROM "{sheet_url}" WHERE B = {entrant_discord}'
             st.write(f"These are the entries that have been submitted for the contest using the handle {entrant_discord}:")
+            st.write(cursor.execute(query))
             for row in cursor.execute(query):
                 print(row)
             
