@@ -327,14 +327,12 @@ def retrieve_last_entry():
             #    print(row)
 
             # troubleshooting
-            query = f'SELECT * FROM "{sheet_url}"'
+            query = f'SELECT * FROM "{sheet_url}" WHERE B = "{entrant_discord}"'
             st.write(f"These are the entries that have been submitted for the contest using the handle {entrant_discord}:")
             response = cursor.execute(query)
             response = response.fetchall()
             for row in response:
-                st.write(row)
                 st.write(f'User "{row[0]}", handle "{row[1]}" submitted an entry on "{row[2]}":  \nQ1: "{row[3]}", "{row[4]}", "{row[5]}", "{row[6]}", "{row[7]}"  \nQ2: "{row[8]}","{row[9]}","{row[10]}","{row[11]}","{row[12]}"  \nQ3: "{row[13]}","{row[14]}","{row[15]}","{row[16]}","{row[17]}"  \nQ4: "{row[18]}", "{row[19]}", "{row[20]}", "{row[21]}", "{row[22]}"  \nQ5: "{row[23]}", "{row[24]}", "{row[25]}", "{row[26]}", "{row[27]}"  \nQ6: "{row[28]}", "{row[29]}", "{row[30]}", "{row[31]}", "{row[32]}"  \nQ7: "{row[33]}", "{row[34]}", "{row[35]}", "{row[36]}", "{row[37]}"  \nQ8: "{row[38]}", "{row[39]}", "{row[40]}", "{row[41]}", "{row[42]}"  \nQ9: "{row[43]}", "{row[44]}", "{row[45]}", "{row[46]}", "{row[47]}"  \nQ10: "{row[48]}", "{row[49]}", "{row[50]}", "{row[51]}", "{row[52]}"')
-            # st.write(response)
 
             
 
