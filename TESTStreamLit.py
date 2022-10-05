@@ -259,12 +259,13 @@ def new_contest_entry():
             submission_time = datetime.datetime.now()
             # Use Shillelagh to insert the info to the spreadsheet
             cursor = connection.cursor()
-            sheet_url = st.secrets["private_gsheets_url"]
+
 
             # Troubleshooting for "Couldn't extract column labels from sheet"
             test_query = f'SELECT * FROM "{sheet_url}"'
             for row in cursor.execute(test_query):
                 print(row)
+            # TOMORROW JOE: You can delete this part ^^^^^
 
             query = f'INSERT INTO "{sheet_url}" VALUES ("{entrant_name}", "{entrant_discord}", "{submission_time}", "{q1a1}", "{q1a2}", "{q1a3}", "{q1a4}", "{q1a5}", "{q2a1}", "{q2a2}", "{q2a3}", "{q2a4}", "{q2a5}", "{q3a1}", "{q3a2}", "{q3a3}", "{q3a4}", "{q3a5}", "{q4a1}", "{q4a2}", "{q4a3}", "{q4a4}", "{q4a5}", "{q5a1}", "{q5a2}", "{q5a3}", "{q5a4}", "{q5a5}", "{q6a1}", "{q6a2}", "{q6a3}", "{q6a4}", "{q6a5}", "{q7a1}", "{q7a2}", "{q7a3}", "{q7a4}", "{q7a5}", "{q8a1}", "{q8a2}", "{q8a3}", "{q8a4}", "{q8a5}", "{q9a1}", "{q9a2}", "{q9a3}", "{q9a4}", "{q9a5}", "{q10a1}", "{q10a2}", "{q10a3}", "{q10a4}", "{q10a5}")'
             cursor.execute(query)
@@ -272,19 +273,30 @@ def new_contest_entry():
         
 
 def retrieve_last_entry():
+    # Initiate form for retrieving contest entries
     with st.form("retrieve_entry_form"):
+        # Collect user discord handle as key to pull entries
+        # FYI: This is not secure, anyone can retrieve anyone else's entry by knowing their 
+        # publicly available discord handle. I don't find this a big deal, but worth highlighting.
         entrant_discord = st.text_input("Your proper discord handle (not server nickname)")
         if entrant_discord.find("#") == -1:
             st.error("Please provide a proper discord handle.")
+        # Button to complete form
+        # FYI: Currently returns ALL entries for that user, rather than only the last. This 
+        # might be worth fixing later, but for now, it's working and it works well enough. 
         submitted = st.form_submit_button("Find my last entry!")
+        # Upon submission via form button...
         if submitted:
-            # Use Shillelagh to retrieve the info from the spreadsheet
+            # Use Shillelagh to establish connection to the Google Sheet (see global variables)
             cursor = connection.cursor()
-            sheet_url = st.secrets["private_gsheets_url"]
+            # Write SQL Query for retrieval of user's entry(s)
             query = f'SELECT * FROM "{sheet_url}" WHERE Discord = "{entrant_discord}"'
-            st.write(f"These are the entries that have been submitted for the contest using the handle {entrant_discord}:")
+            # Execute query, and save resulting Shillelagh object to variable
             response = cursor.execute(query)
+            # Fetch all rows of result as a sequence of sequences to be iteratively handled as needed
             response = response.fetchall()
+            # Provide results in pretty formatting
+            st.write(f"These are the entries that have been submitted for the contest using the handle {entrant_discord}:")
             for row in response:
                 st.write(f'User "{row[0]}", handle "{row[1]}" submitted an entry on "{row[2]}":  \nQ1: "{row[3]}", "{row[4]}", "{row[5]}", "{row[6]}", "{row[7]}"  \nQ2: "{row[8]}","{row[9]}","{row[10]}","{row[11]}","{row[12]}"  \nQ3: "{row[13]}","{row[14]}","{row[15]}","{row[16]}","{row[17]}"  \nQ4: "{row[18]}", "{row[19]}", "{row[20]}", "{row[21]}", "{row[22]}"  \nQ5: "{row[23]}", "{row[24]}", "{row[25]}", "{row[26]}", "{row[27]}"  \nQ6: "{row[28]}", "{row[29]}", "{row[30]}", "{row[31]}", "{row[32]}"  \nQ7: "{row[33]}", "{row[34]}", "{row[35]}", "{row[36]}", "{row[37]}"  \nQ8: "{row[38]}", "{row[39]}", "{row[40]}", "{row[41]}", "{row[42]}"  \nQ9: "{row[43]}", "{row[44]}", "{row[45]}", "{row[46]}", "{row[47]}"  \nQ10: "{row[48]}", "{row[49]}", "{row[50]}", "{row[51]}", "{row[52]}"')
 
@@ -309,6 +321,7 @@ connection = connect(":memory:", adapter_kwargs={
         }
     },
 })
+sheet_url = st.secrets["private_gsheets_url"]
 sidebar_options = ["New contest entry", "Check last entry"]
 user_decision = st.sidebar.selectbox("Enter a new contest entry, or check your last entry?", sidebar_options)
 if user_decision == sidebar_options[0]:
