@@ -258,12 +258,6 @@ def new_contest_entry():
             # Use Shillelagh to insert the info to the spreadsheet
             cursor = connection.cursor()
 
-            # Troubleshooting for "Couldn't extract column labels from sheet"
-            test_query = f'SELECT * FROM "{sheet_url}"'
-            for row in cursor.execute(test_query):
-                print(row)
-            # TOMORROW JOE: You can delete this part ^^^^^
-
             query = f'INSERT INTO "{sheet_url}" VALUES ("{entrant_name}", "{entrant_discord}", "{submission_time}", "{q1a1}", "{q1a2}", "{q1a3}", "{q1a4}", "{q1a5}", "{q2a1}", "{q2a2}", "{q2a3}", "{q2a4}", "{q2a5}", "{q3a1}", "{q3a2}", "{q3a3}", "{q3a4}", "{q3a5}", "{q4a1}", "{q4a2}", "{q4a3}", "{q4a4}", "{q4a5}", "{q5a1}", "{q5a2}", "{q5a3}", "{q5a4}", "{q5a5}", "{q6a1}", "{q6a2}", "{q6a3}", "{q6a4}", "{q6a5}", "{q7a1}", "{q7a2}", "{q7a3}", "{q7a4}", "{q7a5}", "{q8a1}", "{q8a2}", "{q8a3}", "{q8a4}", "{q8a5}", "{q9a1}", "{q9a2}", "{q9a3}", "{q9a4}", "{q9a5}", "{q10a1}", "{q10a2}", "{q10a3}", "{q10a4}", "{q10a5}")'
             cursor.execute(query)
             st.write(f"{entrant_name}, your entry associated with {entrant_discord} has been submitted as of {submission_time} with the following selections:  \nQuestion 1:{q1a1}, {q1a2}, {q1a3}, {q1a4}, {q1a5}  \nQuestion 2:{q2a1}, {q2a2}, {q2a3}, {q2a4}, {q2a5}  \nQuestion 3:{q3a1}, {q3a2}, {q3a3}, {q3a4}, {q3a5}  \nQuestion 4:{q4a1}, {q4a2}, {q4a3}, {q4a4}, {q4a5}  \nQuestion 5:{q5a1}, {q5a2}, {q5a3}, {q5a4}, {q5a5}  \nQuestion 6:{q6a1}, {q6a2}, {q6a3}, {q6a4}, {q6a5}  \nQuestion 7:{q7a1}, {q7a2}, {q7a3}, {q7a4}, {q7a5}  \nQuestion 8:{q8a1}, {q8a2}, {q8a3}, {q8a4}, {q8a5}  \nQuestion 9:{q9a1}, {q9a2}, {q9a3}, {q9a4}, {q9a5}  \nQuestion 10:{q10a1}, {q10a2}, {q10a3}, {q10a4}, {q10a5}")
@@ -323,6 +317,7 @@ sidebar_options = ["New contest entry", "Check last entry"]
 user_decision = st.sidebar.selectbox("Enter a new contest entry, or check your last entry?", sidebar_options)
 if user_decision == sidebar_options[0]:
     # Create timestamp for user submission
+    # This must be done before submission of the form, to avoid using Streamlit's UTC timing
     submission_time = datetime.datetime.now()
     new_contest_entry()
 else:
