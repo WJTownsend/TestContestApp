@@ -333,6 +333,7 @@ def retrieve_last_entry():
             response = response.fetchall()
             for row in response:
                 st.write(row)
+                st.write(row[0])
             # st.write(response)
 
             
