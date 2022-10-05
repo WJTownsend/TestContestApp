@@ -258,25 +258,6 @@ def new_contest_entry():
             # Create timestamp of submission
             submission_time = datetime.datetime.now()
             # Use Shillelagh to insert the info to the spreadsheet
-            credentials = service_account.Credentials.from_service_account_info(
-                st.secrets["gcp_service_account"], 
-                scopes=["https://www.googleapis.com/auth/spreadsheets",],)
-            connection = connect(":memory:", adapter_kwargs={
-                "gsheetsapi" : { 
-                "service_account_info" : {
-                    "type" : st.secrets["gcp_service_account"]["type"],
-                    "project_id" : st.secrets["gcp_service_account"]["project_id"],
-                    "private_key_id" : st.secrets["gcp_service_account"]["private_key_id"],
-                    "private_key" : st.secrets["gcp_service_account"]["private_key"],
-                    "client_email" : st.secrets["gcp_service_account"]["client_email"],
-                    "client_id" : st.secrets["gcp_service_account"]["client_id"],
-                    "auth_uri" : st.secrets["gcp_service_account"]["auth_uri"],
-                    "token_uri" : st.secrets["gcp_service_account"]["token_uri"],
-                    "auth_provider_x509_cert_url" : st.secrets["gcp_service_account"]["auth_provider_x509_cert_url"],
-                    "client_x509_cert_url" : st.secrets["gcp_service_account"]["client_x509_cert_url"],
-                    }
-                },
-            })
             cursor = connection.cursor()
             sheet_url = st.secrets["private_gsheets_url"]
 
@@ -298,35 +279,8 @@ def retrieve_last_entry():
         submitted = st.form_submit_button("Find my last entry!")
         if submitted:
             # Use Shillelagh to retrieve the info from the spreadsheet
-            credentials = service_account.Credentials.from_service_account_info(
-                st.secrets["gcp_service_account"], 
-                scopes=["https://www.googleapis.com/auth/spreadsheets",],)
-            connection = connect(":memory:", adapter_kwargs={
-                "gsheetsapi" : { 
-                "service_account_info" : {
-                    "type" : st.secrets["gcp_service_account"]["type"],
-                    "project_id" : st.secrets["gcp_service_account"]["project_id"],
-                    "private_key_id" : st.secrets["gcp_service_account"]["private_key_id"],
-                    "private_key" : st.secrets["gcp_service_account"]["private_key"],
-                    "client_email" : st.secrets["gcp_service_account"]["client_email"],
-                    "client_id" : st.secrets["gcp_service_account"]["client_id"],
-                    "auth_uri" : st.secrets["gcp_service_account"]["auth_uri"],
-                    "token_uri" : st.secrets["gcp_service_account"]["token_uri"],
-                    "auth_provider_x509_cert_url" : st.secrets["gcp_service_account"]["auth_provider_x509_cert_url"],
-                    "client_x509_cert_url" : st.secrets["gcp_service_account"]["client_x509_cert_url"],
-                    }
-                },
-            })
             cursor = connection.cursor()
             sheet_url = st.secrets["private_gsheets_url"]
-
-            # Intended behavior
-            # query = f'SELECT * FROM "{sheet_url}" WHERE B = {entrant_discord}'
-            # st.write(f"These are the entries that have been submitted for the contest using the handle {entrant_discord}:")
-            # for row in cursor.execute(query):
-            #    print(row)
-
-            # troubleshooting
             query = f'SELECT * FROM "{sheet_url}" WHERE Discord = "{entrant_discord}"'
             st.write(f"These are the entries that have been submitted for the contest using the handle {entrant_discord}:")
             response = cursor.execute(query)
@@ -335,7 +289,26 @@ def retrieve_last_entry():
                 st.write(f'User "{row[0]}", handle "{row[1]}" submitted an entry on "{row[2]}":  \nQ1: "{row[3]}", "{row[4]}", "{row[5]}", "{row[6]}", "{row[7]}"  \nQ2: "{row[8]}","{row[9]}","{row[10]}","{row[11]}","{row[12]}"  \nQ3: "{row[13]}","{row[14]}","{row[15]}","{row[16]}","{row[17]}"  \nQ4: "{row[18]}", "{row[19]}", "{row[20]}", "{row[21]}", "{row[22]}"  \nQ5: "{row[23]}", "{row[24]}", "{row[25]}", "{row[26]}", "{row[27]}"  \nQ6: "{row[28]}", "{row[29]}", "{row[30]}", "{row[31]}", "{row[32]}"  \nQ7: "{row[33]}", "{row[34]}", "{row[35]}", "{row[36]}", "{row[37]}"  \nQ8: "{row[38]}", "{row[39]}", "{row[40]}", "{row[41]}", "{row[42]}"  \nQ9: "{row[43]}", "{row[44]}", "{row[45]}", "{row[46]}", "{row[47]}"  \nQ10: "{row[48]}", "{row[49]}", "{row[50]}", "{row[51]}", "{row[52]}"')
 
             
-
+# Use Shillelagh to retrieve the info from the spreadsheet
+credentials = service_account.Credentials.from_service_account_info(
+    st.secrets["gcp_service_account"], 
+    scopes=["https://www.googleapis.com/auth/spreadsheets",],)
+connection = connect(":memory:", adapter_kwargs={
+    "gsheetsapi" : { 
+    "service_account_info" : {
+        "type" : st.secrets["gcp_service_account"]["type"],
+        "project_id" : st.secrets["gcp_service_account"]["project_id"],
+        "private_key_id" : st.secrets["gcp_service_account"]["private_key_id"],
+        "private_key" : st.secrets["gcp_service_account"]["private_key"],
+        "client_email" : st.secrets["gcp_service_account"]["client_email"],
+        "client_id" : st.secrets["gcp_service_account"]["client_id"],
+        "auth_uri" : st.secrets["gcp_service_account"]["auth_uri"],
+        "token_uri" : st.secrets["gcp_service_account"]["token_uri"],
+        "auth_provider_x509_cert_url" : st.secrets["gcp_service_account"]["auth_provider_x509_cert_url"],
+        "client_x509_cert_url" : st.secrets["gcp_service_account"]["client_x509_cert_url"],
+        }
+    },
+})
 sidebar_options = ["New contest entry", "Check last entry"]
 user_decision = st.sidebar.selectbox("Enter a new contest entry, or check your last entry?", sidebar_options)
 if user_decision == sidebar_options[0]:
