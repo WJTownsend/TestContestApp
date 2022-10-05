@@ -2,7 +2,7 @@ from wsgiref import headers
 import numpy as np
 import pandas as pd
 import datetime
-from sqlalchemy import null
+from sqlalchemy import column, null
 from google.oauth2 import service_account
 from shillelagh.backends.apsw.db import connect
 import streamlit as st
@@ -327,7 +327,7 @@ def retrieve_last_entry():
             #    print(row)
 
             # troubleshooting
-            query = f'SELECT * FROM "{sheet_url}" WHERE "B" = "{entrant_discord}"'
+            query = f'SELECT * FROM "{sheet_url}" WHERE Discord = "{entrant_discord}"'
             st.write(f"These are the entries that have been submitted for the contest using the handle {entrant_discord}:")
             response = cursor.execute(query)
             response = response.fetchall()
