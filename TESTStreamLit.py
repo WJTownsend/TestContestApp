@@ -255,8 +255,6 @@ def new_contest_entry():
             q10a1, q10a2, q10a3, q10a4, q10a5 = temp_answers
         submitted = st.form_submit_button("Submit your entry!")
         if submitted:
-            # Create timestamp of submission
-            submission_time = datetime.datetime.now(tz='MDT')
             # Use Shillelagh to insert the info to the spreadsheet
             cursor = connection.cursor()
 
@@ -324,6 +322,8 @@ sheet_url = st.secrets["private_gsheets_url"]
 sidebar_options = ["New contest entry", "Check last entry"]
 user_decision = st.sidebar.selectbox("Enter a new contest entry, or check your last entry?", sidebar_options)
 if user_decision == sidebar_options[0]:
+    # Create timestamp for user submission
+    submission_time = datetime.datetime.now()
     new_contest_entry()
 else:
     retrieve_last_entry()
