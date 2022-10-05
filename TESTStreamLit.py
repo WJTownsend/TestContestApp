@@ -1,3 +1,6 @@
+from wsgiref import headers
+import numpy as np
+import pandas as pd
 import datetime
 from sqlalchemy import null
 from google.oauth2 import service_account
@@ -326,7 +329,7 @@ def retrieve_last_entry():
             # troubleshooting
             query = f'SELECT * FROM "{sheet_url}"'
             st.write(f"These are the entries that have been submitted for the contest using the handle {entrant_discord}:")
-            response = cursor.execute(query)
+            response = cursor.execute(query, headers=1)
             response = response.fetchall()
             st.write(response)
 
